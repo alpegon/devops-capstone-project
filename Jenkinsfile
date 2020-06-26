@@ -4,25 +4,22 @@ pipeline {
     stage('Linting') {
       parallel {
         stage('Pylint') {
-            agent {
-                docker { image 'alpegon/pylint' }
-            }
-            steps {
-                sh 'pylint --disable=R,C,W1203 app.py'
-            }
+          agent {
+              docker { image 'alpegon/pylint' }
+          }
+          steps {
+              sh 'pylint --disable=R,C,W1203 app.py'
           }
         }
 
         stage('Hadolint') {
-            agent {
-                docker { image 'hadolint/hadolint' }
-            }
-            steps {
-                sh 'hadolint Dockerfile'
-            }
+          agent {
+              docker { image 'hadolint/hadolint' }
+          }
+          steps {
+              sh 'hadolint Dockerfile'
           }
         }
-
       }
     }
 
@@ -31,6 +28,5 @@ pipeline {
         sh 'docker build -t alpegon/price-prediction .'
       }
     }
-
   }
 }
