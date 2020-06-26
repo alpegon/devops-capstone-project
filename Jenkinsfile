@@ -1,23 +1,25 @@
 pipeline {
   agent any
   stages {
-    stage('Pylint') {
+    stage('Linting') {
       parallel {
         stage('Pylint') {
-          steps {
-            dockerNode(image: 'alpegon/pylint') {
-              sh 'pylint --disable=R,C,W1203 app.py'
+            agent {
+                docker { image 'alpegon/pylint' }
             }
-
+            steps {
+                sh 'pylint --disable=R,C,W1203 app.py'
+            }
           }
         }
 
         stage('Hadolint') {
-          steps {
-            dockerNode(image: 'hadolint/hadolint') {
-              sh 'hadolint Dockerfile'
+            agent {
+                docker { image 'hadolint/hadolint' }
             }
-
+            steps {
+                sh 'hadolint Dockerfile'
+            }
           }
         }
 
