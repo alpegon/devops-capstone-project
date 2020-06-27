@@ -1,4 +1,10 @@
 pipeline {
+  environment {
+    registry = "alpegon/price-prediction"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+
   agent any
   stages {
     stage('Linting') {
@@ -32,7 +38,19 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        sh 'docker build -t alpegon/price-prediction .'
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+
+    stage('Deploy Docker Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
       }
     }
 
