@@ -27,15 +27,6 @@ pipeline {
           }
         }
 
-        stage('test') {
-          steps {
-            dockerNode(image: 'alpegon/pylint') {
-              sh 'pylint --disable=R,C,W1203 app.py'
-            }
-
-          }
-        }
-
       }
     }
 
