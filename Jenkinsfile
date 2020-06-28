@@ -1,8 +1,13 @@
 pipeline {
   environment {
+    appFolder = 'house-price-prediction'
+    kubeFolder = 'kubernetes'
+    awsCredential = 'aws-eks'
+    awsRegion = 'us-west-2'
+    eksClusterName = 'capstone'
     registry = "alpegon/price-prediction"
     registryCredential = 'dockerhub'
-    dockerImage = ''
+    dockerImage = '' 
   }
 
   agent any
@@ -17,19 +22,19 @@ pipeline {
 
           }
           steps {
-            sh 'pylint --disable=R,C,W1203 app.py'
+            sh "pylint --disable=R,C,W1203 $appFolder/app.py"
           }
         }
 
         stage('Hadolint') {
           agent {
             docker {
-              image 'hadolint/hadolint'
+              image 'alpegon/hadolint'
             }
 
           }
           steps {
-            sh 'hadolint Dockerfile'
+            sh "hadolint $appFolder/Dockerfile"
           }
         }
 
@@ -53,6 +58,43 @@ pipeline {
         }
       }
     }
+    
+    stage('Set Kubectl Config') {
+      agent {
+        docker {
+          image 'alpegon/kubeops'
+        }
+      }
+      steps {
+        withEnv(['HOME=.']){
+          withAWS(credentials: $awsCredential, region: $awsRegion) {
+            sh "aws eks update-kubeconfig --name $eksClusterName"
+          }
+        }
+      }
+    }
+    
+    stage('Deploy Container (Rollback)') {
+      agent {
+        docker {
+          image 'alpegon/kubeops'
+        }
+      }
+      steps {
+        withEnv(['HOME=.']){
+          withAWS(credentials: $awsCredential, region: $awsRegion) {
+            sh "kubectl apply -f $kubeFolder/app-deployment.yml"
+            sh "kubectl apply -f $kubeFolder/app-service.yml"
+          }
+        }
+      }
+    }
+    
+    stage('Clean Environment') {
+      steps {
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }         
 
   }
 }

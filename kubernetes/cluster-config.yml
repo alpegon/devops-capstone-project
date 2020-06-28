@@ -1,0 +1,15 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: capstone
+  region: us-west-2
+
+nodeGroups:
+  - name: working-nodes
+    instanceType: t2.small
+    minSize: 1
+    maxSize: 3
+    desiredCapacity: 2
+    ssh:
+      publicKeyName: final-project
