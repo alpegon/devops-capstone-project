@@ -34,7 +34,7 @@ pipeline {
 
           }
           steps {
-            sh "hadolint $appFolder/Dockerfile"
+            sh "hadolint containers/$appFolder/Dockerfile"
           }
         }
 
