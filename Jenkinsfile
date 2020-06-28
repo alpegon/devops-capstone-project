@@ -68,7 +68,7 @@ pipeline {
       }
       steps {
         withEnv(['HOME=.']){
-          withAWS(credentials: $awsCredential, region: $awsRegion) {
+          withAWS(credentials: "$awsCredentials", region: "$awsRegion") {
             sh "aws eks update-kubeconfig --name $eksClusterName"
           }
         }
@@ -83,7 +83,7 @@ pipeline {
       }
       steps {
         withEnv(['HOME=.']){
-          withAWS(credentials: $awsCredential, region: $awsRegion) {
+          withAWS(credentials: "$awsCredentials", region: "$awsRegion") {
             sh "kubectl apply -f $kubeFolder/app-deployment.yml"
             sh "kubectl apply -f $kubeFolder/app-service.yml"
           }
