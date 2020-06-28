@@ -3,7 +3,7 @@ pipeline {
     appFolder = 'app'
     appDockerfile = 'containers/app/Dockerfile'
     kubeFolder = 'kubernetes'
-    awsCredential = 'aws-eks'
+    awsCredentials = 'aws-eks'
     awsRegion = 'us-west-2'
     eksClusterName = 'capstone'
     registry = "alpegon/house-price-prediction"
