@@ -1,6 +1,7 @@
 pipeline {
   environment {
     appFolder = 'app'
+    appDockerfile = 'containers/app/Dockerfile'
     kubeFolder = 'kubernetes'
     awsCredential = 'aws-eks'
     awsRegion = 'us-west-2'
@@ -34,7 +35,7 @@ pipeline {
 
           }
           steps {
-            sh "hadolint containers/$appFolder/Dockerfile"
+            sh "hadolint $appDockerfile"
           }
         }
 
@@ -44,7 +45,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build(registry + ":$BUILD_NUMBER", "-f $appDockerfile .")
         }
       }
     }
