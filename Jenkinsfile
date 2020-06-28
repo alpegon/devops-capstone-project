@@ -87,7 +87,7 @@ pipeline {
         withEnv(['HOME=.']){
           withAWS(credentials: "$awsCredentials", region: "$awsRegion") {
             unstash "kube-config"
-            sh "sed \\"s+$registry+$registry:$BUILD_NUMBER+g\\" kubernetes/app-deployment.yml > kubernetes/new-deployment.yml"
+            sh "sed \"s+$registry+$registry:$BUILD_NUMBER+g\" kubernetes/app-deployment.yml > kubernetes/new-deployment.yml"
             sh "kubectl apply -f $kubeFolder/new-deployment.yml"
             sh "kubectl apply -f $kubeFolder/app-service.yml"
           }
