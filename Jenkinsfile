@@ -1,11 +1,11 @@
 pipeline {
   environment {
-    appFolder = 'house-price-prediction'
+    appFolder = 'app'
     kubeFolder = 'kubernetes'
     awsCredential = 'aws-eks'
     awsRegion = 'us-west-2'
     eksClusterName = 'capstone'
-    registry = "alpegon/price-prediction"
+    registry = "alpegon/house-price-prediction"
     registryCredential = 'dockerhub'
     dockerImage = '' 
   }
