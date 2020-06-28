@@ -6,6 +6,7 @@ pipeline {
     awsCredentials = 'aws-eks'
     awsRegion = 'us-west-2'
     eksClusterName = 'capstone'
+    deployment = 'house-price-prediction'
     registry = "alpegon/house-price-prediction"
     registryCredential = 'dockerhub'
     dockerImage = '' 
@@ -88,6 +89,7 @@ pipeline {
             unstash "kube-config"
             sh "kubectl apply -f $kubeFolder/app-deployment.yml"
             sh "kubectl apply -f $kubeFolder/app-service.yml"
+            sh "kubectl set image deployments/$deployment $deployment=$registry:$BUILD_NUMBER"
           }
         }
       }

@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: house-price-prediction
-          image: alpegon/house-price-prediction:latest
+          image: alpegon/house-price-prediction
           imagePullPolicy: Always
           ports:
             - containerPort: 80
