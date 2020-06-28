@@ -7,7 +7,7 @@ pipeline {
     awsRegion = 'us-west-2'
     eksClusterName = 'capstone'
     deployment = 'house-price-prediction'
-    registry = "alpegon/house-price-prediction"
+    registry = 'alpegon/house-price-prediction'
     registryCredential = 'dockerhub'
     dockerImage = '' 
   }
@@ -87,9 +87,9 @@ pipeline {
         withEnv(['HOME=.']){
           withAWS(credentials: "$awsCredentials", region: "$awsRegion") {
             unstash "kube-config"
-            sh "kubectl apply -f $kubeFolder/app-deployment.yml"
+            sh "sed \\"s+$registry+$registry:$BUILD_NUMBER+g\\" kubernetes/app-deployment.yml > kubernetes/new-deployment.yml"
+            sh "kubectl apply -f $kubeFolder/new-deployment.yml"
             sh "kubectl apply -f $kubeFolder/app-service.yml"
-            sh "kubectl set image deployments/$deployment $deployment=$registry:$BUILD_NUMBER"
           }
         }
       }
