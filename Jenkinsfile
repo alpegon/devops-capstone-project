@@ -77,7 +77,7 @@ pipeline {
       }
     }
     
-    stage('Deploy Container (Rollback)') {
+    stage('Rolling Deployment') {
       agent {
         docker {
           image 'alpegon/kubeops'
