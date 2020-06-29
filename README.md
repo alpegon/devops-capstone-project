@@ -3,11 +3,8 @@ Pipeline for integrating and deploying a machine learning application in a AWS E
 
 ## Required tools
 
-This example uses `eksctl`, `kubectl` and the `aws cli`, to install and configure these tools please follow the instructions here:
+This example uses `eksctl`, `kubectl` and the `aws cli`, to install and configure these tools please follow the instructions [here](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html).
 
-```
-https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
-```
 
 ## Launching an EKS cluster in AWS
 
@@ -29,15 +26,14 @@ eksctl delete cluster -f kubernetes/cluster-config.yml
 
 The `Jenkinsfile` can be used to create a pipeline in Jenkins that automatically deploys the application when a new change is pushed to this repository.
 
-The pipeline automatically creates a rolling deployment, and the docker container image deployed has a tag that matches the build number of the jenkins job to ease the debugging.
+The pipeline automatically creates a rolling deployment using the files `app-deployment.yml` and the `app-service.yml` from the `kubernetes` folder, and the docker container image deployed has a tag that matches the build number of the jenkins job to ease the debugging.
 
 The defined Jenkins pipeline executes the steps inside docker containers, to build the required docker containers you can used the Dockerfiles in the folders inside `containers`.
-
 
 ## Makefile
 
 To simplify the container and the cluster creation you can use the Makefile available.
-First edit the `USER` variable inside the Makefile to match your DockerHub username and the you can build all the containers executing:
+First edit the `USER` variable inside the Makefile to match your DockerHub username and then you can build all the containers executing:
 ```
 make build-all-images
 ```
@@ -47,7 +43,7 @@ You can also upload the created images with the command:
 make upload-all-images
 ```
 
-Additionally the makefile can create/upload the images individually. Also the makefile can be use to create and delete the AWS EKS cluster.
+Additionally the makefile can create/upload the images individually. Also the makefile can be used to create and delete the AWS EKS cluster.
 
 ## Test the application
 
